@@ -30,12 +30,12 @@
             renderForm() {
                 return (
                     <div className="note">
-                      <textarea ref="newText"></textarea> /*refs allows us to access via ref  , when props / state is not possible*/
+                      <textarea ref="newText"></textarea> 
                       <button onClick={this.save}>SAVE</button>
                     </div>
                 )
             },
-            renderDisplay() {  /*Renders the Note*/
+            renderDisplay() {  /*Renders the Note    ref allow us to acces when props/state not availale*/
                 return ( 
                     <div className="note">
                         <p>{this.props.children}</p>
@@ -57,7 +57,7 @@
             propTypes: {
                count: function(props, propName){
                    if(typeof props[propName] !== "number"){
-                     return new Error("the count must be a                                       number")
+                     return new Error("the count must be a number")
                    }
          
                    if(props[propName]  > 100) {
@@ -66,9 +66,9 @@
                }
             },
 
-/*react feature, adding how your components wish to work and what web values you expect from user*/
+/* react feature, adding how your components wish to work and what web values you expect from user */
 
-/* if the value provided for count is other than a number return an error*/
+/* if the value provided for count is other than a number return an error */
            
           getInitialState() {
              return{

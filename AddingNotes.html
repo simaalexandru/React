@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://fb.me/react-15.2.1.js"></script>
+        <script src="https://fb.me/react-dom-15.2.1.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.js"></script>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <title>First React File</title>
+    </head>
+    <body>
+        <div id='react-container'></div>
+        <script type="text/babel">
+        var Note = React.createClass({
+            getInitialState() {
+                return {editing: false}
+            },
+            randomBetween(){
+                
+            }
+
+            edit() {
+                this.setState({editing: true})
+            },
+
+            save() {
+                this.props.onChange(this.refs.newText.value, this.props.id)
+                this.setState({editing: false})
+            },
+
+            remove() {
+                this.props.onRemove(this.props.id)
+            },
+
+            renderForm() {
+                return (
+                    <div className="note">
+                      <textarea ref="newText"></textarea> 
+                      <button onClick={this.save}>SAVE</button>
+                    </div>
+                )
+            },
+            renderDisplay() {  /*Renders the Note    ref allow us to acces when props/state not availale*/
+                return ( 
+                    <div className="note">
+                        <p>{this.props.children}</p>
+                        <span>
+                          <button onClick={this.edit}>EDIT</button>
+                          <button onClick={this.remove}>X</button>
+                        </span>
+                    </div>
+                    )
+            },
+            render() { /*Takes care of render- decides wich one to render*/
+              return (this.state.editing) ? this.renderForm()
+                                          : this.renderDisplay()
+
+            }
+        })
+
+        var Board = React.createClass({
+            propTypes: {
+               count: function(props, propName){
+                   if(typeof props[propName] !== "number"){
+                     return new Error("the count must be a number")
+                   }
+         
+                   if(props[propName]  > 100) {
+                    return new Error('Creating' + props[propName] + 'notes is ridiculous') 
+                   }
+               }
+            },
+
+/* react feature, adding how your components wish to work and what web values you expect from user */
+
+/* if the value provided for count is other than a number return an error */
+           
+          getInitialState() {
+             return{
+              notes:[]
+            }
+          },
+          nextId(){
+            this.uniqueId = this.uniqueId || 0 
+            return this.uniqueId++  //incrementing the id's
+          },
+
+          add(text){
+           var notes = [
+            ...this.state.notes,  
+            {
+               id: this.nextId(),
+               note: text
+            }
+           ]
+           this.setState({notes})
+          },
+         update(newText, id) {
+           var notes = this.state.notes.map(
+             note => (note.id !==id) ?
+               note:
+               {
+                 ...note,
+                 note: newText      
+           
+ /* Arrow funtion that takes the notes and checks if the id of the note being edited is the note  ...note, note: newtext = ramane acelasi id dar se schimba textvul din notita */
+               }
+           )
+             this.setState({notes})
+         },
+
+       remove(id){
+           var notes = this.state.notes.filter(note => note.id !== id ) 
+           this.setState({notes})
+
+         },         
+ 
+/* filter-js method - create a new array that doesn't include the id that was removed, based on the id */     
+
+        eachNote(note) {
+           return <Note key={note.id}
+                             id={note.id}
+                             onChange={this.update}
+                             onRemove={this.remove}>
+                             {note.note} 
+                  </Note>
+        },
+
+ /* note.note take the note and dysplay the text from the note */
+
+           render() {
+              return (<div className='board'>
+                        {this.state.notes.map(this.eachNote)} 
+                        <button onClick= {() => this.add('New Note')}>+</button> 
+                      </div>)
+          }
+        })
+  
+/* mapping over the arrat - display a note for each item in the array */
+/* =>  ES6 function takes arguments inside the () and then return whatever follows the arrow */
+/* i = the representative of the item, in the array , note ul dintre brackets  displays the content of the note */    
+        ReactDOM.render(<Board count={10}/>, 
+            document.getElementById('react-container'))
+
+        </script>
+    </body>
+</html>
+
+
+
+
